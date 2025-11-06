@@ -37,22 +37,24 @@
     </script>
   </head>
   <body>
-    <header class="app-header">
-      <nav class="nav">
-        <a class="brand" href="{% url 'home' %}">Agendei</a>
-        <button class="nav-toggle" aria-label="Abrir menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-        <ul class="nav-items">
-          <li><a href="{% url 'home' %}">Home</a></li>
-          <li><a href="{% url 'services' %}">Serviços</a></li>
-          {% if user.is_authenticated %}
-            <li><a href="{% url 'logout' %}">Sair</a></li>
-          {% else %}
-            <li><a href="{% url 'login' %}">Entrar</a></li>
-            <li><a href="{% url 'signup' %}">Cadastrar</a></li>
-          {% endif %}
-        </ul>
-      </nav>
-    </header>
+    {% block header %}
+      <header class="app-header">
+        <nav class="nav">
+          <a class="brand" href="{% url 'home' %}">Agendei</a>
+          <button class="nav-toggle" aria-label="Abrir menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+          <ul class="nav-items">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'services' %}">Serviços</a></li>
+            {% if user.is_authenticated %}
+              <li><a href="{% url 'logout' %}">Sair</a></li>
+            {% else %}
+              <li><a href="{% url 'login' %}">Entrar</a></li>
+              <li><a href="{% url 'signup' %}">Cadastrar</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </header>
+    {% endblock %}
     <main class="container" role="main">
       {% block content %}{% endblock %}
     </main>
