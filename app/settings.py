@@ -146,7 +146,7 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', '1') == '1'
 EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', '0') == '1'
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'no-reply@agendei.local')
-LOGIN_REDIRECT_URL = '/servicos/'
+LOGIN_REDIRECT_URL = '/bem-vindo/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/conta/login/'
 

@@ -16,7 +16,7 @@ from .models import UserProfile, VerificationCode
 class SignupView(FormView):
     template_name = 'accounts/signup.html'
     form_class = SignupForm
-    success_url = reverse_lazy('services')
+    success_url = reverse_lazy('welcome')
 
     def form_valid(self, form):
         user = form.save()
@@ -88,7 +88,7 @@ class PasswordResetRequestView(FormView):
 class CodeVerifyView(FormView):
     template_name = 'accounts/code_verify.html'
     form_class = CodeVerificationForm
-    success_url = reverse_lazy('services')
+    success_url = reverse_lazy('welcome')
 
     def form_valid(self, form):
         user_id = self.request.session.get('password_reset_user_id')

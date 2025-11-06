@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="card">
+    <h1>Bem-vindo, {{ request.user.first_name|default:request.user.username }} 👋</h1>
+    <p>Seu acesso foi confirmado. Você já pode explorar os serviços.</p>
+    <div class="actions">
+      <a class="btn" href="{% url 'services' %}">Ir para serviços</a>
+    </div>
+  </section>
+{% endblock %}
