@@ -37,8 +37,7 @@ services:
       - key: DEFAULT_FROM_EMAIL
         value: no-reply@agendei.local
 
-    # Rodar migrações após cada deploy
-    postDeployCommand: "python manage.py migrate"
+    # Migrações serão executadas no start do container (ver Dockerfile)
 
 databases:
   - name: agendei01-db

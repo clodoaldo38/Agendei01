@@ -71,7 +71,7 @@ Após deploy, acesse:
 
 ### Migrações e SMTP
 
-- Migrações: o blueprint executa automaticamente `python manage.py migrate` após cada deploy.
+- Migrações: executadas no start do container via Docker (`python manage.py migrate`).
 - SMTP: variáveis já previstas no `render.yaml` — ajuste no painel do Render:
   - `EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend`
   - `EMAIL_HOST` (ex.: `smtp.sendgrid.net`)

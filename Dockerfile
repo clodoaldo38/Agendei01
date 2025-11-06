@@ -23,5 +23,5 @@ ENV DJANGO_SETTINGS_MODULE=app.settings \
 # Coletar estáticos no build para servir via Whitenoise
 RUN python manage.py collectstatic --noinput || true
 
-# Iniciar Gunicorn usando a PORT do ambiente (Render)
-CMD ["sh","-c","gunicorn app.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 3"]
+# Executar migrações e iniciar Gunicorn usando a PORT do ambiente (Render)
+CMD ["sh","-c","python manage.py migrate && gunicorn app.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 3"]
