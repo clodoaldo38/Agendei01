@@ -23,16 +23,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key-change-me')
 DEBUG = os.getenv('DEBUG', '1') == '1'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+
+# Helper para listas vindas de env: remove espaços/aspas e entradas vazias
+def _env_list(name: str, default: str):
+    raw = os.getenv(name, default)
+    parts = [p.strip().strip('"').strip("'") for p in raw.split(',')]
+    return [p for p in parts if p]
+
+ALLOWED_HOSTS = _env_list('ALLOWED_HOSTS', '*')
 # Permitir configurar origens confiáveis para CSRF via variável de ambiente
-_csrf_env = os.getenv('CSRF_TRUSTED_ORIGINS', '')
-if _csrf_env:
-    CSRF_TRUSTED_ORIGINS = _csrf_env.split(',')
-else:
-    CSRF_TRUSTED_ORIGINS = [
-        'http://localhost',
-        'http://127.0.0.1',
-    ]
+CSRF_TRUSTED_ORIGINS = _env_list(
+    'CSRF_TRUSTED_ORIGINS',
+    'http://localhost,http://127.0.0.1'
+)
 
 
 # Application definition
