@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block header %}{% endblock %}
 {% block content %}
+  <div class="hero">
+    <div class="logo-badge"><span class="emoji">📅</span><span class="sr-only">Agendei</span></div>
+    <div class="bubble">Agende no seu ritmo!</div>
+  </div>
   <section class="card stack" aria-labelledby="login-title">
     <h2 id="login-title">Entrar</h2>
     <p class="muted">Acesse para visualizar serviços e agendar.</p>
@@ -8,9 +12,12 @@
       {% csrf_token %}
       {{ form.non_field_errors }}
       {% for field in form %}
-        <div>
+        <div class="input-wrap">
           <label for="{{ field.id_for_label }}">{{ field.label }}</label>
           {{ field }}
+          {% if field.name == 'password' %}
+            <button type="button" class="toggle-eye" aria-label="Mostrar/ocultar senha" onclick="togglePassword()">👁️</button>
+          {% endif %}
           {% if field.errors %}
             <div class="field-error">{{ field.errors|striptags }}</div>
           {% endif %}
@@ -23,4 +30,11 @@
       </div>
     </form>
   </section>
+  <script>
+    function togglePassword(){
+      const pw = document.querySelector('input[type="password"]');
+      if(!pw) return;
+      pw.type = pw.type === 'password' ? 'text' : 'password';
+    }
+  </script>
 {% endblock %}
