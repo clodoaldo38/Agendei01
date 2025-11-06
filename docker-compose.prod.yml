@@ -22,6 +22,7 @@ services:
       SECRET_KEY: change-me-in-prod
       DATABASE_URL: postgresql://agendei:agendei@db:5432/agendei
       ALLOWED_HOSTS: "*"
+      CSRF_TRUSTED_ORIGINS: "http://192.168.100.36,http://192.168.100.36:8000,http://localhost,http://127.0.0.1"
     depends_on:
       - db
     ports:
