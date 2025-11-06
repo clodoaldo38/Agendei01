@@ -21,6 +21,24 @@ services:
         fromDatabase:
           name: agendei01-db
           property: connectionString
+      # SMTP (ajuste os valores depois do provisionamento)
+      - key: EMAIL_BACKEND
+        value: django.core.mail.backends.smtp.EmailBackend
+      - key: EMAIL_HOST
+        value: smtp.example.com
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_USE_TLS
+        value: "1"
+      - key: EMAIL_HOST_USER
+        value: ""
+      - key: EMAIL_HOST_PASSWORD
+        generateValue: true
+      - key: DEFAULT_FROM_EMAIL
+        value: no-reply@agendei.local
+
+    # Rodar migrações após cada deploy
+    postDeployCommand: "python manage.py migrate"
 
 databases:
   - name: agendei01-db

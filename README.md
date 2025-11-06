@@ -68,3 +68,15 @@ Após deploy, acesse:
 - `https://<seu-servico>.onrender.com/conta/signup/` (cadastro)
 - `https://<seu-servico>.onrender.com/conta/login/` (login)
 - `https://<seu-servico>.onrender.com/servicos/` (serviços)
+
+### Migrações e SMTP
+
+- Migrações: o blueprint executa automaticamente `python manage.py migrate` após cada deploy.
+- SMTP: variáveis já previstas no `render.yaml` — ajuste no painel do Render:
+  - `EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend`
+  - `EMAIL_HOST` (ex.: `smtp.sendgrid.net`)
+  - `EMAIL_PORT=587`
+  - `EMAIL_USE_TLS=1`
+  - `EMAIL_HOST_USER` (ex.: `apikey` no SendGrid)
+  - `EMAIL_HOST_PASSWORD` (defina como Secret)
+  - `DEFAULT_FROM_EMAIL` (ex.: `no-reply@seu-dominio.com`)
