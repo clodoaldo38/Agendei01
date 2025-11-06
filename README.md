@@ -48,3 +48,23 @@ python manage.py runserver 0.0.0.0:8000
 
 - Whitenoise serve estáticos em produção após `collectstatic`.
 - PWA básico com `manifest.json` e `service-worker.js`.
+
+## Deploy no Render (Blueprint)
+
+Este repositório inclui `render.yaml` para provisionar automaticamente:
+- Serviço Web (`agendei01-web`) usando nosso `Dockerfile`.
+- Banco Postgres gerenciado (`agendei01-db`).
+
+Passos:
+- No Render, crie um Blueprint apontando para este repositório.
+- Render criará o banco e o serviço web; nas variáveis ficam:
+  - `SECRET_KEY` (gerada automaticamente)
+  - `DATABASE_URL` (do banco gerenciado)
+  - `ALLOWED_HOSTS=*.onrender.com`
+  - `CSRF_TRUSTED_ORIGINS=https://*.onrender.com`
+- O serviço usará `PORT` definida pelo Render; o Dockerfile inicia Gunicorn com `0.0.0.0:${PORT:-8000}`.
+
+Após deploy, acesse:
+- `https://<seu-servico>.onrender.com/conta/signup/` (cadastro)
+- `https://<seu-servico>.onrender.com/conta/login/` (login)
+- `https://<seu-servico>.onrender.com/servicos/` (serviços)

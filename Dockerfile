@@ -13,4 +13,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Code will be mounted as a volume in compose
+# Copiar código para a imagem (necessário para Render)
+COPY . /code/
+
+# Variáveis padrão (podem ser sobrescritas em runtime)
+ENV DJANGO_SETTINGS_MODULE=app.settings \
+    DEBUG=0
+
+# Coletar estáticos no build para servir via Whitenoise
+RUN python manage.py collectstatic --noinput || true
+
+# Iniciar Gunicorn usando a PORT do ambiente (Render)
+CMD ["sh","-c","gunicorn app.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 3"]
