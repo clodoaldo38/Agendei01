@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="card stack" aria-labelledby="signup-title">
+    <h2 id="signup-title">Criar Conta</h2>
+    <p class="muted">Cadastre-se para reservar serviços com rapidez.</p>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="field-error">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+        <a class="btn btn-ghost" href="{% url 'login' %}">Já tenho conta</a>
+      </div>
+    </form>
+  </section>
+{% endblock %}

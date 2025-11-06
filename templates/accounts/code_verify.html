@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="card stack" aria-labelledby="verify-title">
+    <h2 id="verify-title">Verificar Código</h2>
+    <p class="muted">Informe o código recebido e defina sua nova senha.</p>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="field-error">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Confirmar</button>
+      </div>
+    </form>
+  </section>
+{% endblock %}

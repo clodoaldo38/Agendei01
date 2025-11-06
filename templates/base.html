@@ -1,0 +1,64 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="manifest" href="/static/manifest.json" />
+    <meta name="theme-color" content="#0ea5e9" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Agendei PWA</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/static/service-worker.js').catch(console.error);
+        });
+      }
+      // Navegação suave: transições entre páginas
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.classList.add('page-enter-active');
+        const isInternal = (href) => href && href.startsWith('/') && !href.startsWith('//');
+        document.querySelectorAll('a[href]').forEach(a => {
+          a.addEventListener('click', (e) => {
+            const href = a.getAttribute('href');
+            if(isInternal(href) && !a.hasAttribute('target')){
+              e.preventDefault();
+              document.body.classList.add('fade-out');
+              setTimeout(() => { window.location.href = href; }, 150);
+            }
+          });
+        });
+      });
+      window.addEventListener('beforeunload', () => {
+        document.body.classList.add('fade-out');
+      });
+    </script>
+  </head>
+  <body>
+    <header class="app-header">
+      <nav class="nav">
+        <a class="brand" href="{% url 'home' %}">Agendei</a>
+        <button class="nav-toggle" aria-label="Abrir menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+        <ul class="nav-items">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'services' %}">Serviços</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'logout' %}">Sair</a></li>
+          {% else %}
+            <li><a href="{% url 'login' %}">Entrar</a></li>
+            <li><a href="{% url 'signup' %}">Cadastrar</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </header>
+    <main class="container" role="main">
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="app-footer">
+      <small>© Agendei</small>
+      <span class="badge">PWA</span>
+    </footer>
+  </body>
+  </html>

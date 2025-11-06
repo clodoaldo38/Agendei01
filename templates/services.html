@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="stack">
+    <div class="card">
+      <h2>Serviços disponíveis</h2>
+      <p class="muted">Escolha um serviço e agende um horário.</p>
+      <div id="service-list" class="list">
+        {% for s in services %}
+          <div class="item">
+            <div>
+              <h3>{{ s.name }}</h3>
+              <div class="item-meta">Prestador: {{ s.provider.username }} · Categoria: {% if s.category %}{{ s.category.name }}{% else %}—{% endif %} · Duração: {{ s.duration_minutes }} min</div>
+            </div>
+            <div class="price">R$ {{ s.price }}</div>
+          </div>
+        {% empty %}
+          <p class="muted">Nenhum serviço cadastrado.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Agendar</h2>
+      <form id="booking-form" class="stack" onsubmit="return createAppointment(event)">
+        <div>
+          <label for="service">Serviço</label>
+          <select id="service" required>
+            {% for s in services %}
+              <option value="{{ s.id }}">{{ s.name }} ({{ s.duration_minutes }} min)</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="scheduled_for">Data e horário</label>
+          <input id="scheduled_for" type="datetime-local" required />
+        </div>
+        <div>
+          <label for="notes">Observações (opcional)</label>
+          <textarea id="notes" rows="3"></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Agendar</button>
+          <button class="btn btn-ghost" type="reset">Limpar</button>
+        </div>
+        <p id="booking-status" class="muted" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    function getCsrfToken(){
+      const m = document.cookie.match(/csrftoken=([^;]+)/);
+      return m ? m[1] : '';
+    }
+
+    async function createAppointment(ev){
+      ev.preventDefault();
+      const status = document.getElementById('booking-status');
+      status.textContent = 'Enviando…';
+      const service = document.getElementById('service').value;
+      const scheduledLocal = document.getElementById('scheduled_for').value; // yyyy-MM-ddTHH:mm
+      if(!scheduledLocal){ status.textContent = 'Selecione data e horário.'; return false; }
+
+      // converter para ISO com fuso local: enviar como UTC assumindo horário local
+      const dt = new Date(scheduledLocal);
+      const scheduledISO = new Date(dt.getTime() - dt.getTimezoneOffset()*60000).toISOString();
+
+      const body = { service: Number(service), scheduled_for: scheduledISO, notes: document.getElementById('notes').value || '' };
+      try {
+        const res = await fetch('/api/appointments/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+          body: JSON.stringify(body)
+        });
+        const json = await res.json();
+        if(res.ok){
+          status.textContent = 'Agendamento criado com sucesso!';
+        } else {
+          status.textContent = (json && (json.detail || json.non_field_errors || json.message)) || 'Falha ao agendar. Verifique os dados.';
+        }
+      } catch(err){
+        status.textContent = 'Erro de rede ao agendar.';
+      }
+      return false;
+    }
+  </script>
+{% endblock %}

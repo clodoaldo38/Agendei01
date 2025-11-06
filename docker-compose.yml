@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: agendei
+      POSTGRES_USER: agendei
+      POSTGRES_PASSWORD: agendei
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    working_dir: /code
+    environment:
+      DJANGO_SETTINGS_MODULE: app.settings
+      DEBUG: "1"
+      SECRET_KEY: dev-secret-key-change-me
+      DATABASE_URL: postgresql://agendei:agendei@db:5432/agendei
+      ALLOWED_HOSTS: "*"
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata:

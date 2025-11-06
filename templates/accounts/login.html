@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="card stack" aria-labelledby="login-title">
+    <h2 id="login-title">Entrar</h2>
+    <p class="muted">Acesse para visualizar serviços e agendar.</p>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="field-error">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Entrar</button>
+        <a class="btn btn-ghost" href="{% url 'signup' %}">Criar conta</a>
+        <a class="btn btn-ghost" href="{% url 'password_reset_request' %}">Esqueci minha senha</a>
+      </div>
+    </form>
+  </section>
+{% endblock %}
